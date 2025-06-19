@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Para ti 💜</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>9 meses contigo 💜</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       height: 100vh;
-      background: linear-gradient(to bottom, #fbe7ff, #e5ccf5);
+      background: linear-gradient(to bottom, #f9e0ff, #e7ccf5);
+      font-family: 'Nunito', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      font-family: 'Segoe UI', sans-serif;
+      position: relative;
     }
 
     .mensaje {
@@ -23,53 +25,85 @@
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       color: #5e2b88;
-      font-size: 1.5rem;
-      max-width: 600px;
+      font-size: 1.6rem;
+      max-width: 700px;
       text-align: center;
-      margin-bottom: 1rem;
       z-index: 1;
+      font-family: 'Great Vibes', cursive;
+      white-space: pre-wrap;
+      min-height: 100px;
     }
 
-    .contador {
+    .contador, .proximo {
       font-size: 1.2rem;
       color: #4b1366;
+      margin-top: 1rem;
       z-index: 1;
     }
 
-    .decoracion {
+    .decoracion, .explosion {
       position: absolute;
-      font-size: 2rem;
-      animation: flotar 10s linear infinite;
-      opacity: 0.8;
+      font-size: 1.5rem;
+      pointer-events: none;
     }
 
     @keyframes flotar {
-      0% {
-        transform: translateY(100vh) rotate(0deg);
-        opacity: 0;
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-100vh) rotate(360deg);
-        opacity: 0;
-      }
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+
+    @keyframes fadeUp {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-60px); }
+    }
+
+    .corazon9 {
+      position: absolute;
+      top: 2rem;
+      font-size: 2.5rem;
+      color: #9b42c7;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    audio {
+      position: absolute;
+      bottom: 1rem;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
-  <div class="mensaje">
-"Y sí, casi siempre estoy en silencio, es por si oyes
-Mis latidos a lo lejos, te llevo en mi, corazón tú tienes
-Sus llaves, nada nos podrá separar jamás y además lo sabes…" 
-  </div>
+  <div class="corazon9">💜 9 meses contigo 💜</div>
+  <div class="mensaje" id="mensaje"></div>
   <div class="contador" id="contador"></div>
+  <div class="proximo" id="proximo"></div>
+
+  <audio controls autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4e206ec8b3.mp3?filename=romantic-background-piano-music-for-video-11882.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio.
+  </audio>
 
   <script>
-    // FECHA DE INICIO
-    const inicio = new Date("2024-09-20T11:30:00");
+    const texto = `Que la distancia no te haga olvidar que te quiero\ny que mi silencio no te haga pensar que me olvidé de ti.`;
+    const mensajeDiv = document.getElementById("mensaje");
 
+    let i = 0;
+    function escribir() {
+      if (i < texto.length) {
+        mensajeDiv.innerHTML += texto.charAt(i);
+        i++;
+        setTimeout(escribir, 60);
+      }
+    }
+    escribir();
+
+    const inicio = new Date("2024-09-20T11:30:00");
     function actualizarContador() {
       const ahora = new Date();
       const diferencia = ahora - inicio;
@@ -80,24 +114,46 @@ Sus llaves, nada nos podrá separar jamás y además lo sabes…"
       const segundos = Math.floor((diferencia / 1000) % 60);
 
       document.getElementById("contador").textContent = `Mi amor por ti comenzó hace... ${dias} días ${horas} horas ${minutos} minutos ${segundos} segundos`;
-    }
 
+      const proximoMes = new Date(inicio);
+      proximoMes.setMonth(proximoMes.getMonth() + Math.floor(dias / 30) + 1);
+      const restante = proximoMes - ahora;
+
+      if (restante > 0) {
+        const rd = Math.floor(restante / (1000 * 60 * 60 * 24));
+        const rh = Math.floor((restante / (1000 * 60 * 60)) % 24);
+        const rm = Math.floor((restante / (1000 * 60)) % 60);
+        const rs = Math.floor((restante / 1000) % 60);
+        document.getElementById("proximo").textContent = `Faltan ${rd} días ${rh} horas ${rm} minutos ${rs} segundos para nuestro siguiente mes juntos 💜`;
+      }
+    }
     setInterval(actualizarContador, 1000);
     actualizarContador();
 
-    // DECORACIONES ANIMADAS
     const emojis = ["🐧", "💜", "⭐", "🌸", "🪽", "🧸"];
     const cantidad = 40;
-
     for (let i = 0; i < cantidad; i++) {
       const deco = document.createElement("div");
       deco.className = "decoracion";
       deco.style.left = Math.random() * 100 + "vw";
-      deco.style.animationDuration = (6 + Math.random() * 5) + "s";
+      deco.style.animation = `flotar ${(6 + Math.random() * 5)}s linear infinite`;
       deco.style.fontSize = (1 + Math.random() * 2) + "rem";
       deco.textContent = emojis[Math.floor(Math.random() * emojis.length)];
       document.body.appendChild(deco);
     }
+
+    document.body.addEventListener("click", e => {
+      for (let i = 0; i < 5; i++) {
+        const span = document.createElement("div");
+        span.className = "explosion";
+        span.textContent = "Te amo 💜";
+        span.style.left = (e.clientX - 10 + Math.random() * 40 - 20) + "px";
+        span.style.top = (e.clientY - 10 + Math.random() * 40 - 20) + "px";
+        span.style.animation = "fadeUp 1s ease forwards";
+        document.body.appendChild(span);
+        setTimeout(() => span.remove(), 1000);
+      }
+    });
   </script>
 </body>
 </html>
